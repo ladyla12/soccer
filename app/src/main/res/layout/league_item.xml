@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:cardCornerRadius="50dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:layout_gravity="center">
+
+            <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:id="@+id/leagueImg"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/english_premier_league"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/guideline1"
+                    app:layout_constraintGuide_begin="135dp"
+                    android:orientation="vertical"/>
+
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/sm1"
+                    android:src="@drawable/ic_facebook"
+                    android:contentDescription="@string/sm_facebook"
+                    app:layout_constraintTop_toBottomOf="@id/leagueName"
+                    app:layout_constraintStart_toEndOf="@id/guideline1"/>
+
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/sm2"
+                    android:src="@drawable/ic_twitter"
+                    android:contentDescription="@string/sm_twitter"
+                    app:layout_constraintTop_toBottomOf="@id/sm1"
+                    app:layout_constraintStart_toEndOf="@id/guideline1"/>
+
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/sm3"
+                    android:src="@drawable/ic_youtube"
+                    android:contentDescription="@string/sm_youtube"
+                    app:layout_constraintTop_toBottomOf="@id/sm2"
+                    app:layout_constraintStart_toEndOf="@id/guideline1"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/guideline2"
+                    app:layout_constraintGuide_begin="165dp"
+                    android:orientation="vertical"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/leagueName"
+                    android:text="@string/hello_blank_fragment"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/guideline2"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/facebook_link"
+                    android:text="@string/sm_facebook"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/blue"
+                    app:layout_constraintTop_toTopOf="@id/sm1"
+                    app:layout_constraintStart_toEndOf="@id/guideline2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/sm1"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/twitter_link"
+                    android:text="@string/sm_twitter"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/blue"
+                    app:layout_constraintTop_toTopOf="@id/sm2"
+                    app:layout_constraintStart_toEndOf="@id/guideline2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/sm2"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/youtube_link"
+                    android:text="@string/sm_youtube"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/blue"
+                    app:layout_constraintTop_toTopOf="@id/sm3"
+                    app:layout_constraintStart_toEndOf="@id/guideline2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/sm3"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>
