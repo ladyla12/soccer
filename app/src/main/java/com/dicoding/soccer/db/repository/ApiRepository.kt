@@ -13,6 +13,46 @@ interface ApiCallback<T> {
 
 class ApiRepository {
 
+    fun getAllTeam(leagueId: String, callback: ApiCallback<TeamResponse?>){
+        RestApiClient.create().getLeagueTeams(leagueId)
+            .enqueue(object : Callback<TeamResponse>{
+                override fun onResponse(call: Call<TeamResponse>, response: Response<TeamResponse>) {
+                    response.let {
+                        if (it.isSuccessful){
+                            callback.onLoad(it.body())
+                        }
+                        else {
+                            callback.onError(it.errorBody().toString())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<TeamResponse>, t: Throwable) {
+                    callback.onError(t.message)
+                }
+            })
+    }
+
+    fun getAllPlayer(teamId: String, callback: ApiCallback<PlayerResponse?>){
+        RestApiClient.create().getPlayer(teamId)
+            .enqueue(object : Callback<PlayerResponse>{
+                override fun onResponse(call: Call<PlayerResponse>, response: Response<PlayerResponse>) {
+                    response.let {
+                        if (it.isSuccessful){
+                            callback.onLoad(it.body())
+                        }
+                        else {
+                            callback.onError(it.errorBody().toString())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<PlayerResponse>, t: Throwable) {
+                    callback.onError(t.message)
+                }
+            })
+    }
+
     fun getPastEvent(leagueId: String, callback: ApiCallback<MatchResponse?>) {
         RestApiClient.create().getPastEvent(leagueId)
             .enqueue(object : Callback<MatchResponse> {
@@ -91,6 +131,26 @@ class ApiRepository {
             })
     }
 
+    fun getDetailPlayer(playerId: String, callback: ApiCallback<PlayerDetailResponse?>){
+        RestApiClient.create().getPlayerDetail(playerId)
+            .enqueue(object : Callback<PlayerDetailResponse>{
+                override fun onResponse(call: Call<PlayerDetailResponse>, response: Response<PlayerDetailResponse>) {
+                    response.let {
+                        if (it.isSuccessful){
+                            callback.onLoad(it.body())
+                        }
+                        else {
+                            callback.onError(it.errorBody().toString())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<PlayerDetailResponse>, t: Throwable) {
+                    callback.onError(t.message)
+                }
+            })
+    }
+
     fun getLeague(leagueId: String, callback: ApiCallback<LeagueResponse?>){
         RestApiClient.create().getLeague(leagueId)
             .enqueue(object : Callback<LeagueResponse>{
@@ -111,20 +171,59 @@ class ApiRepository {
             })
     }
 
-    fun searchEvent(matchName: String, callback: ApiCallback<SearchResponse?>) {
+    fun searchEvent(matchName: String, callback: ApiCallback<MatchSearchResponse?>) {
         RestApiClient.create().srcEvent(matchName)
-            .enqueue(object : Callback<SearchResponse> {
-                override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                    response.let {
+            .enqueue(object : Callback<MatchSearchResponse> {
+                override fun onResponse(call: Call<MatchSearchResponse>, responseMatch: Response<MatchSearchResponse>) {
+                    responseMatch.let {
                         if (it.isSuccessful) {
                             callback.onLoad(it.body())
                         } else {
+                            callback.onError(responseMatch.errorBody().toString())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<MatchSearchResponse>, t: Throwable) {
+                    callback.onError(t.message)
+                }
+            })
+    }
+
+    fun searchTeam(teamName: String, callback: ApiCallback<TeamResponse?>) {
+        RestApiClient.create().srcTeam(teamName)
+            .enqueue(object : Callback<TeamResponse> {
+                override fun onResponse(call: Call<TeamResponse>, responseTeam: Response<TeamResponse>) {
+                    responseTeam.let {
+                        if (it.isSuccessful) {
+                            callback.onLoad(it.body())
+                        } else {
+                            callback.onError(responseTeam.errorBody().toString())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<TeamResponse>, t: Throwable) {
+                    callback.onError(t.message)
+                }
+            })
+    }
+
+    fun getLeagueKlasemen(leagueId: String, callback: ApiCallback<LeagueTableResponse?>){
+        RestApiClient.create().seeLeagueTable(leagueId)
+            .enqueue(object : Callback<LeagueTableResponse>{
+                override fun onResponse(call: Call<LeagueTableResponse>, response: Response<LeagueTableResponse>) {
+                    response.let {
+                        if (it.isSuccessful){
+                            callback.onLoad(it.body())
+                        }
+                        else {
                             callback.onError(response.errorBody().toString())
                         }
                     }
                 }
 
-                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                override fun onFailure(call: Call<LeagueTableResponse>, t: Throwable) {
                     callback.onError(t.message)
                 }
             })

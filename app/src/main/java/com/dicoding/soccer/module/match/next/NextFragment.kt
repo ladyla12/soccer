@@ -11,7 +11,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dicoding.soccer.R
+import com.dicoding.soccer.db.RestApiClient
 import com.dicoding.soccer.db.model.Match
+import com.dicoding.soccer.db.model.MatchResponse
+import com.dicoding.soccer.db.repository.ApiRepository
 import com.dicoding.soccer.module.match.MatchInterface
 import com.dicoding.soccer.module.match.detail.DetailMatchActivity
 import com.dicoding.soccer.module.match.last.ID_LEAGUE
@@ -41,7 +44,13 @@ class NextFragment : Fragment(), MatchInterface, SwipeRefreshLayout.OnRefreshLis
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(NextViewModel::class.java)
-        mIdLeague?.let { viewModel.loadMatch(this.requireContext(), it, this) }
+
+        matchList.clear()
+        viewModel.onFragmentCreated(this, ApiRepository())
+        if (RestApiClient.networkCheck(requireContext())){
+            mIdLeague?.let { viewModel.loadMatch(it) }
+        }
+
         next_match_list.layoutManager = LinearLayoutManager(context)
         listMatchAdapter = ListMatchAdapter(this.requireContext(), matchList, this) {}
         next_match_list.adapter = listMatchAdapter
@@ -58,7 +67,7 @@ class NextFragment : Fragment(), MatchInterface, SwipeRefreshLayout.OnRefreshLis
     }
 
     override fun onRefresh() {
-        mIdLeague?.let { viewModel.loadMatch(this.requireContext(), it, this) }
+        mIdLeague?.let { viewModel.loadMatch(it) }
         swipeId.isRefreshing = false
     }
 
@@ -74,8 +83,8 @@ class NextFragment : Fragment(), MatchInterface, SwipeRefreshLayout.OnRefreshLis
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
-    override fun loadData(data: List<Match>) {
-        matchList.addAll(data)
+    override fun loadData(data: MatchResponse) {
+        matchList.addAll(data.events)
         listMatchAdapter.notifyDataSetChanged()
     }
 
@@ -85,5 +94,10 @@ class NextFragment : Fragment(), MatchInterface, SwipeRefreshLayout.OnRefreshLis
         args.putString(ID_LEAGUE, idLeague)
         fragment.arguments = args
         return fragment
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onFragmentDestroyed()
     }
 }

@@ -15,33 +15,24 @@
             app:titleTextColor="@color/white"
             app:layout_constraintTop_toTopOf="parent"/>
 
-    <androidx.core.widget.ContentLoadingProgressBar
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/fav_progressbar"
-            android:layout_gravity="center"
-            android:visibility="invisible"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.3"/>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/fav_swipe"
-            android:background="@color/turqoise"
+            android:id="@+id/favPager"
             app:layout_constraintTop_toBottomOf="@id/fav_toolbar"
             app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fav_match_list"
+        <com.google.android.material.tabs.TabLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/fav_tab"
+                android:background="@color/turqoise"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabTextColor="@color/white">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </com.google.android.material.tabs.TabLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.viewpager.widget.ViewPager>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

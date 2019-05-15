@@ -10,9 +10,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.dicoding.soccer.MainActivity
 import com.dicoding.soccer.R
+import com.dicoding.soccer.db.RestApiClient
 import com.dicoding.soccer.db.database
 import com.dicoding.soccer.db.model.MatchDetail
+import com.dicoding.soccer.db.model.MatchDetailResponse
 import com.dicoding.soccer.db.model.Team
+import com.dicoding.soccer.db.model.TeamResponse
+import com.dicoding.soccer.db.repository.ApiRepository
 import com.dicoding.soccer.module.favorite.FavoriteActivity
 import com.dicoding.soccer.module.match.DetailMatchInterface
 import com.dicoding.soccer.utilities.*
@@ -38,12 +42,13 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
     private var awayBadge: String? = null
     private var isFavorite: Boolean = false
     private var menuItem: Menu? = null
-
+    private var unknown: String = "Unknown"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         idEvent = intent.getStringExtra(eventId)
         homeBadge = intent.getStringExtra(team_home_id)
         awayBadge = intent.getStringExtra(team_away_id)
+
         favoriteState()
 
         super.onCreate(savedInstanceState)
@@ -53,14 +58,25 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         val titleSupport = supportActionBar
         titleSupport?.title = "Detail Match"
+
         dtlViewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
-        dtlViewModel.loadMatch(this, idEvent.toString(), this)
+        dtlViewModel.activityCreated(this, ApiRepository())
+        if (RestApiClient.networkCheck(applicationContext)) {
+            idEvent?.let { dtlViewModel.loadMatch(it) }
+            homeBadge?.let { dtlViewModel.loadTeam(it) }
+            awayBadge?.let { dtlViewModel.loadTeam(it) }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         favoriteState()
         setFavorite()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dtlViewModel.activityDestroyed()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -80,9 +96,9 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
-    override fun loadImage(data: List<Team>, whichTeam: String) {
+    override fun loadImage(data: TeamResponse, whichTeam: String) {
         teamImage.clear()
-        teamImage.addAll(data)
+        teamImage.addAll(data.teams)
 
         when (whichTeam) {
             homeBadge -> {
@@ -99,15 +115,21 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
         }
     }
 
-    override fun loadData(data: List<MatchDetail>) {
+    override fun loadData(data: MatchDetailResponse) {
         matchDetail.clear()
-        matchDetail.addAll(data)
+        matchDetail.addAll(data.events)
 
-        if (matchDetail[0].homeScore == null){
+        if (matchDetail[0].homeScore == null) {
             dtl_score_line.gone()
         }
 
-        dtl_match_date.text = dateFormat(matchDetail[0].eventDate)
+        if (matchDetail[0].eventDate.isNullOrEmpty()){
+            dtl_match_date.text = unknown
+        }
+        else {
+            dtl_match_date.text = dateFormat(matchDetail[0].eventDate)
+        }
+
         //HOME
         dtl_home_score.text = matchDetail[0].homeScore
         dtl_home_name.text = matchDetail[0].homeTeam
@@ -134,17 +156,16 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.fav_menu, menu)
-        if (isFavorite){
+        if (isFavorite) {
             menu?.findItem(R.id.dtl_favorite)?.setIcon(R.drawable.ic_favorite)
-        }
-        else {
+        } else {
             menu?.findItem(R.id.dtl_favorite)?.setIcon(R.drawable.ic_favorite_border)
         }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId){
+        return when (item?.itemId) {
             R.id.dtl_home_menu -> {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -163,8 +184,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
                 if (isFavorite) {
                     item.setIcon(R.drawable.ic_favorite_border)
                     removeFromFavorite()
-                }
-                else {
+                } else {
                     item.setIcon(R.drawable.ic_favorite)
                     addToFavorite()
                 }
@@ -178,61 +198,57 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchInterface {
         }
     }
 
-    private fun addToFavorite(){
-        try {
-            database.use {
-                insert(
-                    Favorite.TABLE_FAVORITE,
-                    Favorite.MATCH_ID to matchDetail[0].eventId,
-                    Favorite.MATCH_DATE to dateFormat(matchDetail[0].eventDate),
-                    Favorite.HOME_TEAM_ID to matchDetail[0].homeTeamId,
-                    Favorite.HOME_TEAM_NAME to matchDetail[0].homeTeam,
-                    Favorite.HOME_TEAM_SCORE to matchDetail[0].homeScore,
-                    Favorite.AWAY_TEAM_ID to matchDetail[0].awayTeamId,
-                    Favorite.AWAY_TEAM_NAME to matchDetail[0].awayTeam,
-                    Favorite.AWAY_TEAM_SCORE to matchDetail[0].awayScore
-                )
-            }
-            showMessage("Added to Database")
-        }
-        catch (e: Exception) {
-            showMessage(e.localizedMessage)
-        }
-    }
-
-    private fun setFavorite(){
-        if(isFavorite){
+    private fun setFavorite() {
+        if (isFavorite) {
             menuItem?.findItem(R.id.dtl_favorite)?.setIcon(R.drawable.ic_favorite_border)
-        }
-        else {
+        } else {
             menuItem?.findItem(R.id.dtl_favorite)?.setIcon(R.drawable.ic_favorite)
         }
     }
 
-    private fun removeFromFavorite(){
+    private fun addToFavorite() {
         try {
             database.use {
-                delete(
-                    Favorite.TABLE_FAVORITE, "(MATCH_ID = {id})", "id" to idEvent.toString()
+                insert(
+                    FavoriteMatch.MATCH_FAVORITE,
+                    FavoriteMatch.MATCH_ID to matchDetail[0].eventId,
+                    FavoriteMatch.MATCH_DATE to dateFormat(matchDetail[0].eventDate),
+                    FavoriteMatch.HOME_TEAM_ID to matchDetail[0].homeTeamId,
+                    FavoriteMatch.HOME_TEAM_NAME to matchDetail[0].homeTeam,
+                    FavoriteMatch.HOME_TEAM_SCORE to matchDetail[0].homeScore,
+                    FavoriteMatch.AWAY_TEAM_ID to matchDetail[0].awayTeamId,
+                    FavoriteMatch.AWAY_TEAM_NAME to matchDetail[0].awayTeam,
+                    FavoriteMatch.AWAY_TEAM_SCORE to matchDetail[0].awayScore
                 )
             }
-            showMessage("Removed from database")
-        }
-        catch (e: SQLClientInfoException){
+            showMessage("Added to Database")
+        } catch (e: Exception) {
             showMessage(e.localizedMessage)
         }
     }
 
-    private fun favoriteState(){
+    private fun removeFromFavorite() {
         try {
             database.use {
-                val result = select(Favorite.TABLE_FAVORITE)
-                    .whereArgs("(MATCH_ID = {id})", "id" to idEvent.toString())
-                val fav = result.parseList(classParser<Favorite>())
-                if(fav.isNotEmpty()) isFavorite = true
+                delete(
+                    FavoriteMatch.MATCH_FAVORITE, "(MATCH_ID = {id})", "id" to idEvent.toString()
+                )
             }
+            showMessage("Removed from database")
+        } catch (e: SQLClientInfoException) {
+            showMessage(e.localizedMessage)
         }
-        catch (e: SQLClientInfoException){
+    }
+
+    private fun favoriteState() {
+        try {
+            database.use {
+                val result = select(FavoriteMatch.MATCH_FAVORITE)
+                    .whereArgs("(MATCH_ID = {id})", "id" to idEvent.toString())
+                val fav = result.parseList(classParser<FavoriteMatch>())
+                if (fav.isNotEmpty()) isFavorite = true
+            }
+        } catch (e: SQLClientInfoException) {
             showMessage(e.localizedMessage)
         }
     }

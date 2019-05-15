@@ -1,57 +1,48 @@
 package com.dicoding.soccer.module.match.detail
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.dicoding.soccer.db.RestApiClient
-import com.dicoding.soccer.db.model.MatchDetail
 import com.dicoding.soccer.db.model.MatchDetailResponse
-import com.dicoding.soccer.db.model.Team
 import com.dicoding.soccer.db.model.TeamResponse
 import com.dicoding.soccer.db.repository.ApiCallback
 import com.dicoding.soccer.db.repository.ApiRepository
 import com.dicoding.soccer.module.match.DetailMatchInterface
+import com.dicoding.soccer.utilities.PermenEspresso
 
 class DetailViewModel: ViewModel() {
-    private var listMatch: MutableList<MatchDetail> = mutableListOf()
-    private var listTeam: MutableList<Team> = mutableListOf()
-    private val dataApi = ApiRepository()
     private var view: DetailMatchInterface? = null
+    private lateinit var dataApi: ApiRepository
 
-    fun loadMatch(context: Context, eventId: String, call: DetailMatchInterface) {
+    fun activityCreated(call: DetailMatchInterface, api: ApiRepository) {
+        this.view = call
+        this.dataApi = api
+    }
+
+    fun activityDestroyed() {
+        this.view = null
+    }
+
+    fun loadMatch(eventId: String) {
         view?.showLoading()
         try {
-            if (RestApiClient.networkCheck(context)){
-                view?.showLoading()
-                dataApi.getDetailMatch(eventId, object : ApiCallback<MatchDetailResponse?> {
-                    override fun onLoad(data: MatchDetailResponse?) {
-                        view?.hideLoading()
-                        try {
-                            if (data != null && data.events.isNotEmpty()) {
-                                listMatch.clear()
-                                listMatch.addAll(data.events)
-                                view = call
-                                view?.loadData(listMatch)
-                                loadTeam(context, data.events[0].homeTeamId.toString())
-                                loadTeam(context, data.events[0].awayTeamId.toString())
-                            }
-                            else {
-                                view?.showMessage("No Data Found!")
-                            }
-                        } catch (e: Exception) {
-                            view?.showMessage("Please go swipe for refresh data")
-                        }
+            PermenEspresso.increase()
+            dataApi.getDetailMatch(eventId, object : ApiCallback<MatchDetailResponse?>{
+                override fun onLoad(data: MatchDetailResponse?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+                    if (data?.events.isNullOrEmpty()){
+                        view?.showMessage("Match Event Not Found")
                     }
-
-                    override fun onError(error: String?) {
-                        view?.showMessage(error.toString())
+                    else {
+                        data?.let { view?.loadData(it) }
                     }
+                }
 
-                })
-            }
-            else{
-                view?.hideLoading()
-                view?.showMessage("Please check your connection")
-            }
+                override fun onError(error: String?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+                    view?.showMessage("Gagal get data, silahkan coba lagi")
+                }
+            })
         }
         catch (e: Exception){
             view?.hideLoading()
@@ -59,38 +50,23 @@ class DetailViewModel: ViewModel() {
         }
     }
 
-    fun loadTeam(context: Context, idTeam: String) {
+    fun loadTeam(idTeam: String) {
         view?.showLoading()
         try {
-            if (RestApiClient.networkCheck(context)){
-                view?.showLoading()
-                dataApi.getDetailTeam(idTeam, object : ApiCallback<TeamResponse?> {
-                    override fun onLoad(data: TeamResponse?) {
-                        view?.hideLoading()
-                        try {
-                            if (data != null && data.teams.isNotEmpty()) {
-                                listTeam.clear()
-                                listTeam.addAll(data.teams)
-                                view?.loadImage(listTeam, idTeam)
-                            }
-                            else {
-                                view?.showMessage("No Data Found!")
-                            }
-                        } catch (e: Exception) {
-                            view?.showMessage("Please go swipe for refresh data")
-                        }
-                    }
+            PermenEspresso.increase()
+            dataApi.getDetailTeam(idTeam, object : ApiCallback<TeamResponse?>{
+                override fun onLoad(data: TeamResponse?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+                    data?.let { view?.loadImage(it, idTeam) }
+                }
 
-                    override fun onError(error: String?) {
-                        view?.showMessage(error.toString())
-                    }
-
-                })
-            }
-            else{
-                view?.hideLoading()
-                view?.showMessage("Please check your connection")
-            }
+                override fun onError(error: String?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+                    view?.showMessage("Gagal get data, silahkan coba lagi")
+                }
+            })
         }
         catch (e: Exception){
             view?.hideLoading()

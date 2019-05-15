@@ -36,6 +36,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/leagueTabMatch"
                 android:background="@color/turqoise"
+                app:tabGravity="fill"
+                app:tabMode="scrollable"
                 app:tabTextColor="@color/white">
 
         </com.google.android.material.tabs.TabLayout>

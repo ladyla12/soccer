@@ -22,10 +22,3 @@ fun dateFormat(value: String?): String {
     formatDate.timeZone = TimeZone.getTimeZone("UTC")
     return formatDate.format(parseDate.parse(value))
 }
-
-/*fun timeFormat(value: String?): String {
-    val parseDate = SimpleDateFormat("HH:mm:ss", Locale.US)
-    val formatDate = SimpleDateFormat("HH:mm", Locale("in", "ID"))
-    formatDate.timeZone = TimeZone.getTimeZone("UTC")
-    return formatDate.format(parseDate.parse(value))
-}*/

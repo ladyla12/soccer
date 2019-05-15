@@ -1,18 +1,13 @@
 <resources>
     <string name="app_name">Soccer</string>
-    <string name="last_match">LAST MATCH</string>
-    <string name="next_match">NEXT MATCH</string>
     <string name="home">HOME</string>
     <string name="favorite">FAVORITE</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="team_search">Enter Team Name</string>
 
-    <string name="favorites">Fav. Match</string>
-    <string name="title_dashboard">Dashboard</string>
     <string name="vs">VS</string>
     <string name="team_badge">Team Badge</string>
-    <string name="league">League :</string>
     <string name="goals">Goals</string>
     <string name="shots">Shots</string>
     <string name="lineups">Lineups</string>
@@ -21,31 +16,31 @@
     <string name="midfield">Midfield</string>
     <string name="foward">Forward</string>
     <string name="substitutes">Substitutes</string>
-    <string name="match_detail">Match Detail</string>
 
-    <item name="item_splash_logo" type="id"/>
     <string name="search">Search</string>
 
-    <string name="teams">Teams :</string>
-    <string name="title_activity_team_detail">Team Detail</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_player_detail">Player Detail</string>
-    <string name="weight_kg">Weight (Kg)</string>
-    <string name="height_m">Height (m)</string>
-    <string name="zero_value">0</string>
+    <string name="klasement_team_name">Team name</string>
+    <string name="klasement_played">Play</string>
+    <string name="klasement_goals">Goal</string>
+    <string name="klasement_win">Win</string>
+    <string name="klasement_draw">Draw</string>
+    <string name="klasement_loss">Loss</string>
+    <string name="klasement_total">Total</string>
+
+    <string name="team_formed">Formed :</string>
+    <string name="team_desc">Desc :</string>
+
+    <string name="player_birthday">Birthday :</string>
+    <string name="player_nationality">Nationality :</string>
+    <string name="player_height">Height :</string>
+    <string name="player_weight">Weight :</string>
+    <string name="player_signed_date">Signed Date :</string>
+    <string name="player_signed_price">Signed Price :</string>
+    <string name="player_position">Position :</string>
 
     <string name="sm_facebook">https://www.facebook.com</string>
     <string name="sm_twitter">https://www.twitter.com</string>
     <string name="sm_youtube">https://www.youtube.com</string>
-
-    <string-array name="league_list">
-        <item>English Premier League</item>
-        <item>English League Championship</item>
-        <item>French Ligue 1</item>
-        <item>Italian Serie A</item>
-        <item>Spanish La Liga</item>
-    </string-array>
 
     <string-array name="league_id">
         <item>4328</item>
@@ -55,11 +50,12 @@
         <item>4335</item>
     </string-array>
 
-    <string-array name="league_badge">
-        <item>@drawable/english_premier_league</item>
-        <item>@drawable/english_league_champio</item>
-        <item>@drawable/french_league</item>
-        <item>@drawable/serie_a</item>
-        <item>@drawable/la_liga</item>
-    </string-array>
+    <string name="lorem2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Curabitur gravida arcu ac tortor dignissim. Senectus et netus et malesuada fames ac turpis
+        egestas. Nullam vehicula ipsum a arcu cursus.
+        Vestibulum lorem sed risus ultricies tristique nulla. Sit amet facilisis magna etiam tempor. \n\n
+        Vel fringilla est ullamcorper eget nulla facilisi. Pellentesque sit amet porttitor eget dolor morbi. Hac
+        habitasse platea dictumst quisque sagittis purus sit. Facilisis sed odio morbi quis commodo.
+    </string>
 </resources>

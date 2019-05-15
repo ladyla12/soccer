@@ -19,17 +19,23 @@ interface SportsDBApi {
     fun getTeamInfo(@Query("id", encoded = true) teamId: String): Call<TeamResponse>
 
     @GET("searchevents.php")
-    fun srcEvent(@Query("e", encoded = true) teamName: String): Call<SearchResponse>
+    fun srcEvent(@Query("e", encoded = true) teamName: String): Call<MatchSearchResponse>
 
-//    @GET("searchteams.php")
-//    fun srcTeam(@Query("t", encoded = true) teamName: String): Call<TeamResponse>
+    @GET("searchteams.php")
+    fun srcTeam(@Query("t", encoded = true) teamName: String): Call<TeamResponse>
 
     @GET("lookupleague.php")
     fun getLeague(@Query("id", encoded = true) idLeague: String): Call<LeagueResponse>
 
-//    @GET("lookup_all_teams.php")
-//    fun srcTeamsByLeagueId(@Query("id", encoded = true) idLeague: String): Call<TeamResponse>
+    @GET("lookup_all_teams.php")
+    fun getLeagueTeams(@Query("id", encoded = true) idLeague: String): Call<TeamResponse>
 
-//    @GET("lookupteam.php")
-//    fun srcTeamsById(@Query("id", encoded = true) idTeam: String): Call<TeamResponse>
+    @GET("lookuptable.php")
+    fun seeLeagueTable(@Query("l", encoded = true) leagueId: String): Call<LeagueTableResponse>
+
+    @GET("lookup_all_players.php")
+    fun getPlayer(@Query("id", encoded = true) teamId: String): Call<PlayerResponse>
+
+    @GET("lookupplayer.php")
+    fun getPlayerDetail(@Query("id", encoded = true) playerId: String): Call<PlayerDetailResponse>
 }

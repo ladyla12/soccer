@@ -1,56 +1,81 @@
 package com.dicoding.soccer.module.search
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.dicoding.soccer.db.RestApiClient
-import com.dicoding.soccer.db.model.Match
-import com.dicoding.soccer.db.model.SearchResponse
+import com.dicoding.soccer.db.model.MatchSearchResponse
+import com.dicoding.soccer.db.model.TeamResponse
 import com.dicoding.soccer.db.repository.ApiCallback
 import com.dicoding.soccer.db.repository.ApiRepository
-import com.dicoding.soccer.module.match.MatchInterface
+import com.dicoding.soccer.utilities.PermenEspresso
 
-class SearchViewModel: ViewModel() {
-    private var listMatch: MutableList<Match> = mutableListOf()
-    private val dataApi = ApiRepository()
-    private var view: MatchInterface? = null
+class SearchViewModel : ViewModel() {
+    private var view: SearchInterface? = null
+    private lateinit var dataApi: ApiRepository
 
-    fun loadMatch(context: Context, teamName: String, call: MatchInterface) {
-        Log.d("XXX", "From model : $teamName")
+    fun activityCreated(call: SearchInterface, api: ApiRepository) {
+        this.view = call
+        this.dataApi = api
+    }
+
+    fun activityDestroyed() {
+        this.view = null
+    }
+
+    fun loadMatch(teamName: String) {
         view?.showLoading()
         try {
-            if (RestApiClient.networkCheck(context)){
-                view?.showLoading()
-                dataApi.searchEvent(teamName, object : ApiCallback<SearchResponse?> {
-                    override fun onLoad(data: SearchResponse?) {
-                        view?.hideLoading()
-                        try {
-                            if (data != null && data.event.isNotEmpty()) {
-                                listMatch.clear()
-                                listMatch.addAll(data.event)
-                                view = call
-                                view!!.loadData(listMatch)
-                            }
-                            else {
-                                view?.showMessage("No Data Found!")
-                            }
-                        } catch (e: Exception) {
-                            view?.showMessage("Please go swipe for refresh data")
-                        }
-                    }
+            PermenEspresso.increase()
+            dataApi.searchEvent(teamName, object : ApiCallback<MatchSearchResponse?> {
+                override fun onLoad(data: MatchSearchResponse?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
 
-                    override fun onError(error: String?) {
-                        view?.showMessage(error.toString())
+                    if (data?.event.isNullOrEmpty()){
+                        view?.showMessage("$teamName Not Found")
                     }
+                    else {
+                        data?.let { view?.searchMatchResult(it) }
+                    }
+                }
 
-                })
-            }
-            else{
-                view?.hideLoading()
-                view?.showMessage("Please check your connection")
-            }
+                override fun onError(error: String?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+                    view?.showMessage("Please go swipe for refresh data")
+                }
+            })
+        } catch (e: Exception) {
+            PermenEspresso.decrease()
+            view?.hideLoading()
+            view?.showMessage(e.message.toString())
         }
-        catch (e: Exception){
+    }
+
+    fun loadTeam(teamName: String){
+        view?.showLoading()
+        try {
+            PermenEspresso.increase()
+            dataApi.searchTeam(teamName, object : ApiCallback<TeamResponse?>{
+                override fun onLoad(data: TeamResponse?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+
+                    if (data?.teams.isNullOrEmpty()){
+                        view?.showMessage("$teamName Not Found")
+                    }
+                    else {
+                        data?.let { view?.searchTeamResult(it) }
+                    }
+                }
+
+                override fun onError(error: String?) {
+                    PermenEspresso.decrease()
+                    view?.hideLoading()
+                    view?.showMessage("Please go swipe for refresh data")
+                }
+            })
+        }
+        catch (e: java.lang.Exception) {
+            PermenEspresso.decrease()
             view?.hideLoading()
             view?.showMessage(e.message.toString())
         }

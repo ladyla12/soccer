@@ -22,7 +22,7 @@ class DbHelper(ctx: Context): ManagedSQLiteOpenHelper(ctx, "Favorite.db", null, 
 
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable(
-            "TABLE_FAVORITE", true,
+            "MATCH_FAVORITE", true,
             "ID_" to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
             "MATCH_ID" to TEXT + UNIQUE,
             "MATCH_DATE" to TEXT,
@@ -33,9 +33,18 @@ class DbHelper(ctx: Context): ManagedSQLiteOpenHelper(ctx, "Favorite.db", null, 
             "AWAY_TEAM_NAME" to TEXT,
             "AWAY_TEAM_SCORE" to TEXT
         )
+
+        db.createTable(
+            "TEAM_FAVORITE", true,
+            "ID_" to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
+            "TEAM_ID" to TEXT + UNIQUE,
+            "TEAM_NAME" to TEXT,
+            "TEAM_BADGE" to TEXT
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.dropTable("TABLE_FAVORITE", true)
+        db.dropTable("MATCH_FAVORITE", true)
+        db.dropTable("TEAM_FAVORITE", true)
     }
 }

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        tools:context=".module.team.info.TeamInfoFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/static_formed_textview"
+                android:text="@string/team_formed"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_guideline"
+                app:layout_constraintGuide_begin="86dp"
+                android:orientation="vertical"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_formed"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="@id/static_formed_textview"
+                app:layout_constraintStart_toEndOf="@id/info_guideline"
+                app:layout_constraintBottom_toBottomOf="@id/static_formed_textview"
+                tools:text="1945"/>
+
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/sm1"
+                android:src="@drawable/ic_facebook"
+                android:contentDescription="@string/sm_facebook"
+                app:layout_constraintTop_toBottomOf="@id/static_formed_textview"
+                app:layout_constraintStart_toStartOf="@id/static_formed_textview"
+                app:layout_constraintEnd_toEndOf="@id/static_formed_textview"/>
+
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/sm2"
+                android:src="@drawable/ic_twitter"
+                android:contentDescription="@string/sm_twitter"
+                app:layout_constraintTop_toBottomOf="@id/sm1"
+                app:layout_constraintStart_toStartOf="@id/sm1"
+                app:layout_constraintEnd_toEndOf="@id/sm1"/>
+
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/sm3"
+                android:src="@drawable/ic_youtube"
+                android:contentDescription="@string/sm_youtube"
+                app:layout_constraintTop_toBottomOf="@id/sm2"
+                app:layout_constraintStart_toStartOf="@id/sm2"
+                app:layout_constraintEnd_toEndOf="@id/sm2"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_fb_link"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="@id/sm1"
+                app:layout_constraintStart_toEndOf="@id/info_guideline"
+                app:layout_constraintBottom_toBottomOf="@id/sm1"
+                tools:text="www.facebook.com"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_twitter_link"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="@id/sm2"
+                app:layout_constraintStart_toEndOf="@id/info_guideline"
+                app:layout_constraintBottom_toBottomOf="@id/sm2"
+                tools:text="www.twitter.com"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_youtube_link"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="@id/sm3"
+                app:layout_constraintStart_toEndOf="@id/info_guideline"
+                app:layout_constraintBottom_toBottomOf="@id/sm3"
+                tools:text="www.youtube.com"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:id="@+id/static_desc_textview"
+                android:text="@string/team_desc"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/sm3"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_desc"
+                android:text="@string/lorem2"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="@id/static_desc_textview"
+                app:layout_constraintStart_toEndOf="@id/info_guideline"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

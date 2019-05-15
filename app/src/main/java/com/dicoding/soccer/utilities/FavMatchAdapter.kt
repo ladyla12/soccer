@@ -11,9 +11,9 @@ import kotlinx.android.synthetic.main.list_match.view.*
 
 class FavMatchAdapter(
     private val context: Context,
-    private val favList: List<Favorite>,
+    private val favList: List<FavoriteMatch>,
     private val favInterface: FavInterface,
-    private val listener: (Favorite) -> Unit
+    private val listener: (FavoriteMatch) -> Unit
 ) : RecyclerView.Adapter<FavMatchAdapter.FavHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -26,7 +26,7 @@ class FavMatchAdapter(
     }
 
     class FavHolder(view: View, private val fi: FavInterface) : RecyclerView.ViewHolder(view) {
-        fun bindItem(favList: Favorite, listener: (Favorite) -> Unit){
+        fun bindItem(favList: FavoriteMatch, listener: (FavoriteMatch) -> Unit){
             itemView.tgl_match.text = favList.matchDate
             itemView.home_team_name.text = favList.homeTeamName
             itemView.home_score.text = favList.homeTeamScore
