@@ -19,6 +19,7 @@ import com.dicoding.soccer.module.match.MatchInterface
 import com.dicoding.soccer.module.match.detail.DetailMatchActivity
 import com.dicoding.soccer.module.match.last.ID_LEAGUE
 import com.dicoding.soccer.utilities.ListMatchAdapter
+import com.dicoding.soccer.utilities.gone
 import com.dicoding.soccer.utilities.invicible
 import com.dicoding.soccer.utilities.visible
 import kotlinx.android.synthetic.main.next_fragment.*
@@ -84,8 +85,14 @@ class NextFragment : Fragment(), MatchInterface, SwipeRefreshLayout.OnRefreshLis
     }
 
     override fun loadData(data: MatchResponse) {
-        matchList.addAll(data.events)
-        listMatchAdapter.notifyDataSetChanged()
+        if (data.events.isNullOrEmpty()){
+            next_match_list.gone()
+            textView.visible()
+        }
+        else {
+            matchList.addAll(data.events)
+            listMatchAdapter.notifyDataSetChanged()
+        }
     }
 
     fun newInstance(idLeague: String): NextFragment {
